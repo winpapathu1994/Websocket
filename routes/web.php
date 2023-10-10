@@ -1,9 +1,10 @@
 <?php
-
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ChannelController;
 use App\Events\Test;
+use App\Events\ChatMessageEvent;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -27,5 +28,12 @@ Route::get('/broadcast', function () {
     broadcast(new Test());
 });
 
+Route::get('/ws', function () {
+    return view('websocket');
+});
 
-//Route::get('/broadcast', [ChannelController::class, 'broadcast']);
+Route::post('/chat-message', function(Request $request) {
+    event(new ChatMessageEvent($request->message, auth()->user()));
+    return null;
+});
+
