@@ -1,10 +1,9 @@
 <?php
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ChannelController;
+use App\Http\Controllers\UserController;
 use App\Events\Test;
-use App\Events\ChatMessageEvent;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -28,12 +27,17 @@ Route::get('/broadcast', function () {
     broadcast(new Test());
 });
 
-Route::get('/ws', function () {
-    return view('websocket');
+Route::get('/', function () {
+  if(Auth::User())
+  {
+    return redirect('chat');
+  } else {
+    return redirect('login');
+  }
 });
+Route::middleware('auth:sanctum')->group(function(){
 
-Route::post('/chat-message', function(Request $request) {
-    event(new ChatMessageEvent($request->message, auth()->user()));
-    return null;
+Route::post('/chat-message', [ChannelController::class, 'chatMessage']);
+Route::get('/chat', [ChannelController::class, 'allMessages']);
+Route::get('/all_users', [UserController::class, 'allUsers']);
 });
-

@@ -30,12 +30,18 @@ tr:nth-child(even) {
         <th>Id</th>
         <th>Name</th>
         <th>Email</th>
+        <th>Action</th>
     </tr>
+    @foreach($users as $user)
     <tr>
         <td>{{$user->id}}</td>
         <td>{{$user->name}}</td>
         <td>{{$user->email}}</td>
+        <td><button type="button" class="btn btn-primary">Create Room</button> &nbsp;
+        <button type="button" class="btn btn-success">Chat</button>
+      </td>
     </tr>
+    @endforeach
 </table>
 
 </div>

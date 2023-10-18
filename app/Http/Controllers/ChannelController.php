@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Events\Test;
+use App\Events\ChatMessageEvent;
+use App\Models\Message;
 class ChannelController extends Controller
 {
 
@@ -12,9 +13,30 @@ class ChannelController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function broadcast()
+    public function chatMessage(Request $request)
     {
-      return broadcast(new Test());
-      // return "welcome to channel";
+      $message = new Message();
+      $message->user_id = auth()->user()->id;
+      $message->body = $request->message;
+      $message->save();
+
+      event(new ChatMessageEvent($request->message, auth()->user()));
+      return null;
+
+    }
+
+     /**
+     * All message
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function allMessages(Request $request)
+    {
+      $messages = Message::select('messages.body', 'users.name')
+      ->join('users', 'users.id', '=', 'messages.user_id')
+      ->get();
+      $authUser = auth()->user()->email;
+
+      return view('websocket',compact("messages","authUser"));
     }
 }

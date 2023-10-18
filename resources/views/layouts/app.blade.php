@@ -10,7 +10,7 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+     <script src="{{ mix('js/app.js') }}" defer></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -18,6 +18,8 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+ 
+    @stack('css')
 </head>
 <body>
     <div id="app">
@@ -33,7 +35,15 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
-
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('home') }}">{{ __('Home') }}</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ asset('chat') }}">{{ __('Chat Group') }}</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ asset('all_users') }}">{{ __('User List') }}</a>
+                                </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -78,6 +88,8 @@
         <main class="py-4">
             @yield('content')
         </main>
+        @stack('scripts')
     </div>
+    
 </body>
 </html>
